@@ -1,18 +1,18 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
 
+//【apps】，默认为apps，修改这里的配置的同时，也要同时重命名/src/apps的这个文件夹名称  
+// 对应编译后部署到服务器的路径是 http://192.168.0.100:8085/apps/default/index.html
+var moduleName = 'apps'
+
 module.exports = {
-	
-  //网站模块名，例如 http://192.168.0.216:8089/module/app/initlayer.html 中的 
-  //【views】，默认为views，修改这里的配置的同时，也要同时重命名/src/views的这个文件夹名称  
-  moduleName:'views', 
-  
+  moduleName,
   build: {
     env: require('./prod.env'),
     index: path.resolve(__dirname, '../dist/index.html'),
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsRoot: path.resolve(__dirname, '../dist/' + moduleName),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '../../',
+    assetsPublicPath: '../',
     productionSourceMap: true,
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.
@@ -28,7 +28,7 @@ module.exports = {
   },
   dev: {
     env: require('./dev.env'),
-    port: 8091,
+    port: 8090,
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',

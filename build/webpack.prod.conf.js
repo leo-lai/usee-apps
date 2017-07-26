@@ -9,13 +9,13 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
-var entries =  utils.getMultiEntry('./src/'+config.moduleName+'/**/**/*.js'); // 获得入口js文件
+var entries = utils.getMultiEntry('./src/' + config.moduleName + '/**/**/*.js'); // 获得入口js文件
 var chunks = Object.keys(entries);
 
 
-var env = process.env.NODE_ENV === 'testing'
-  ? require('../config/test.env')
-  : config.build.env
+var env = process.env.NODE_ENV === 'testing' ?
+  require('../config/test.env') :
+  config.build.env
 
 var webpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -27,8 +27,8 @@ var webpackConfig = merge(baseWebpackConfig, {
   //devtool: config.build.productionSourceMap ? '#source-map' : false,
   output: {
     path: config.build.assetsRoot,
-    filename: utils.assetsPath('js/[name].js'),
-    chunkFilename: utils.assetsPath('js/[id].js')
+    filename: utils.assetsPath('js/[name].[hash].js'),
+    chunkFilename: utils.assetsPath('js/[id].[hash].js')
   },
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
@@ -43,7 +43,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     }),
     // extract css into its own file
     new ExtractTextPlugin({
-      filename: utils.assetsPath('css/[name].css')
+      filename: utils.assetsPath('css/[name].[hash].css')
     }),
     // Compress extracted CSS. We are using this plugin so that possible
     // duplicated CSS from different components can be deduped.
@@ -51,22 +51,22 @@ var webpackConfig = merge(baseWebpackConfig, {
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
-   /* new HtmlWebpackPlugin({
-      filename: process.env.NODE_ENV === 'testing'
-        ? 'index.html'
-        : config.build.index,
-      template: 'index.html',
-      inject: true,
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true
-        // more options:
-        // https://github.com/kangax/html-minifier#options-quick-reference
-      },
-      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency'
-    }),*/
+    /* new HtmlWebpackPlugin({
+       filename: process.env.NODE_ENV === 'testing'
+         ? 'index.html'
+         : config.build.index,
+       template: 'index.html',
+       inject: true,
+       minify: {
+         removeComments: true,
+         collapseWhitespace: true,
+         removeAttributeQuotes: true
+         // more options:
+         // https://github.com/kangax/html-minifier#options-quick-reference
+       },
+       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+       chunksSortMode: 'dependency'
+     }),*/
     // split vendor js into its own file
     /*new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
@@ -86,9 +86,9 @@ var webpackConfig = merge(baseWebpackConfig, {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       chunks: chunks,
-	  	minChunks: 4 || chunks.length 
+      minChunks: 4 || chunks.length
     }),
-	/*
+    /*
     // copy custom static assets
     new CopyWebpackPlugin([
       {
@@ -97,9 +97,6 @@ var webpackConfig = merge(baseWebpackConfig, {
         ignore: ['.*']
       }
     ])*/
-
-   
-
   ]
 })
 
@@ -110,11 +107,7 @@ if (config.build.productionGzip) {
     new CompressionWebpackPlugin({
       asset: '[path].gz[query]',
       algorithm: 'gzip',
-      test: new RegExp(
-        '\\.(' +
-        config.build.productionGzipExtensions.join('|') +
-        ')$'
-      ),
+      test: new RegExp( '\\.(' + config.build.productionGzipExtensions.join('|') + ')$' ),
       threshold: 10240,
       minRatio: 0.8
     })
@@ -127,18 +120,16 @@ if (config.build.bundleAnalyzerReport) {
 }
 
 //构建生成多页面的HtmlWebpackPlugin配置，主要是循环生成
-var pages =  utils.getMultiEntry('./src/'+config.moduleName+'/**/**/*.html');
+var pages =  utils.getMultiEntry('./src/'+config.moduleName+'/*/template.html')
 for (var pathname in pages) {
-
   var conf = {
-    filename: pathname + '.html',
-    template: pages[pathname], // 模板路径
-    chunks: ['vendor',pathname], // 每个html引用的js模块
-    inject: true,              // js插入位置
-	hash:true
-  };
- 
-  webpackConfig.plugins.push(new HtmlWebpackPlugin(conf));
+    filename: pathname + '/index.html',
+    template: pages[pathname],        // 模板路径
+    chunks: ['vendor', pathname],     // 每个html引用的js模块
+    inject: true                      // js插入位置
+  }
+
+  webpackConfig.plugins.push(new HtmlWebpackPlugin(conf))
 }
 
 

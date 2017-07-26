@@ -1,6 +1,4 @@
 
-import conf from './conf';
-
 import axios from 'axios';
 
 var oproto = Object.prototype;
