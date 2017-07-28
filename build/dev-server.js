@@ -70,7 +70,7 @@ app.get(/[^\/]*(?=\.\w+$)/, function(req, res) {
 })
 
 
-var uri = 'http://localhost:' + port 
+var uri = 'http://192.168.0.88:' + port 
 
 devMiddleware.waitUntilValid(function () {
   console.log('> 构建完成，已自动在浏览器打开页面，如未自动打开，请手工复制下面的链接，复制到浏览器里打开。')

@@ -11,22 +11,6 @@
 4、`npm run dev`将会自动在浏览器打开页面，如未正常打开，请访问完整的路径`http:// localhost:8091/views/home/list.html`
 
 
-## 前言
-`vue2.0`上线已经有一段时间了，现在`vue2.1`也都已经发布了，是时候来更新基于vue的多页面脚手架了。
-
-相信用vue的童鞋，很多一部分在用于spa（单页面）项目，也不排除传统的多页面项目，我们就用vue开发了多页面的webapp，相对于spa开发效率更高，使用单页面或者多页面，最终还是看项目的需求啦。
-
-这一次我们基于`vuejs2+webpack2+vuxui2`(好222的项目)重新发布了全新的vue脚手架，同时还支持二级目录，以解决页面比较多时，便于归类查找的问题。基于webpack2，构建速度高。ajax获取数据，使用`axios`，当然还有其他的优化，咱们先看看demo呗。
-
-demo地址：
-http://v.lanchenglv.com/demo/vue2-cli-vux2-multe-page/views/home/list.html
-
-github地址：
-https://github.com/bluefox1688/vue-cli-multi-page
-
-** 此版仅支持vu2.0，如果需要vue1.0多页面脚手架，请访问分支 **
-https://github.com/bluefox1688/vue-cli-multi-page/tree/master 
-
 ## 2.0的主要功能
 
  1. 全局统一使用的模块`Lib.js`库
