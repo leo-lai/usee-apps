@@ -64,10 +64,9 @@ app.use(hotMiddleware)
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
-app.get(/[^\/]*(?=\.\w+$)/, function(req, res) {
-  console.log(__dirname)
-  res.sendFile(path.join(__dirname + '/index.html'))
-})
+// app.get(/[^\/]*(?=\.\w+$)/, function(req, res) {
+//   res.sendFile(path.join(__dirname + '/index.html'))
+// })
 
 
 var uri = 'http://192.168.0.88:' + port 

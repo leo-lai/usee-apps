@@ -303,17 +303,6 @@ a.l-link:not([class*='l-flex-']){display: block;}
 .l-fl{float: left;}
 .l-fr{float: right;}
 .l-zoom{overflow: hidden;}
-/*三角勾选*/
-.l-triangle-slt{border: 1px solid transparent; position: relative;}
-.l-triangle-slt.active{border-color: #007aff;overflow: hidden;border-radius: 1px;}
-.l-triangle-slt.active:after{
-  font-family: 'l-iconfont';
-  content: '\e667';
-  color: #007aff;
-  position: absolute;
-  right: -2px;
-  bottom: -8px;
-}
 
 /*表单错误提示样式*/
 .l-toptip {
@@ -330,14 +319,3 @@ a.l-link:not([class*='l-flex-']){display: block;}
 .l-toptip._warn{
   background-color: #e96900; 
 }
-.l-waiting{
-  position: absolute; top:0; left: 0; right: 0; bottom: 0; z-index: 100; background: rgba(0, 0, 0, 0); color:#fff;
-  display: flex; flex-flow: column nowrap; justify-content: center; align-items: center; 
-  ._inner{
-    background: rgba(0, 0, 0, 0.5); text-align: center; 
-    padding: 0.75rem 1rem; border-radius: 5px; font-size: 0.7rem;
-    .mui-spinner{margin: 0.2rem 0 0;}
-    ._txt{color: rgba(255,255,255, 0.8); font-size: 0.6rem; padding: 0 0.4rem;}
-  }
-}
-.l-waiting._hide{display: none; }

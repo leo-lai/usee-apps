@@ -1,10 +1,11 @@
-var utils = require('./utils')
 var webpack = require('webpack')
-var config = require('../config')
 var merge = require('webpack-merge')
-var baseWebpackConfig = require('./webpack.base.conf')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+
+var utils = require('./utils')
+var config = require('../config')
+var baseWebpackConfig = require('./webpack.base.conf')
 
 // add hot-reload related code to entry chunks
 Object.keys(baseWebpackConfig.entry).forEach(function (name) {
@@ -24,12 +25,13 @@ module.exports = merge(baseWebpackConfig, {
     // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
+    /*  
     // https://github.com/ampedandwired/html-webpack-plugin
-   /*  new HtmlWebpackPlugin({
+    new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',
       inject: true
-    }), */
+    }),*/
     new FriendlyErrorsPlugin()
   ]
 })
@@ -38,10 +40,18 @@ module.exports = merge(baseWebpackConfig, {
 var pages =  utils.getMultiEntry('./src/'+config.moduleName+'/*/template.html')
 for (var pathname in pages) {
   var conf = {
-    filename: pathname + '.html',
-    template: pages[pathname], // 模板路径
-    chunks: [pathname, 'vendors', 'manifest'], // 每个html引用的js模块
-    inject: true              // js插入位置
+    template: pages[pathname],                  // 模板路径
+    filename: pathname + '.html',               // 输出路径
+    chunks: [pathname, 'vendors', 'manifest'],  // 每个html引用的js模块
+    inject: true,                               // js插入位置
+    minify: { // more options:https://github.com/kangax/html-minifier#options-quick-reference
+      minifyCSS: true,
+      minifyJS: true,
+      removeComments: true,
+      collapseWhitespace: true,
+      removeAttributeQuotes: false
+    },
+    favicon: ''
   }
 
   if(pathname === 'default'){

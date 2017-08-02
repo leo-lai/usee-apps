@@ -1,21 +1,21 @@
-var path = require('path')
-var utils = require('./utils')
 var webpack = require('webpack')
-var config = require('../config')
 var merge = require('webpack-merge')
-var baseWebpackConfig = require('./webpack.base.conf')
+var path = require('path')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+var PrerenderSpaPlugin = require('prerender-spa-plugin')
 
-var entries = utils.getMultiEntry('./src/' + config.moduleName + '/**/**/*.js'); // 获得入口js文件
-var chunks = Object.keys(entries);
+var utils = require('./utils')
+var config = require('../config')
+var baseWebpackConfig = require('./webpack.base.conf')
 
+// 获得入口js文件
+var entries = utils.getMultiEntry('./src/' + config.moduleName + '/**/**/*.js') 
+var chunks = Object.keys(entries)
 
-var env = process.env.NODE_ENV === 'testing' ?
-  require('../config/test.env') :
-  config.build.env
+var env = process.env.NODE_ENV === 'testing' ? require('../config/test.env') : config.build.env
 
 var webpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -83,9 +83,11 @@ var webpackConfig = merge(baseWebpackConfig, {
     }),*/
     // extract webpack runtime and module manifest to its own file in order to
     // prevent vendor hash from being updated whenever app bundle is updated
+    // 提取公共模块
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      chunks: chunks,
+      name: 'vendor',                 // 公共模块的名称
+      chunks: chunks,                 // chunks是需要提取的模块
+      // 公共模块被使用的最小次数。比如配置为3，也就是同一个模块只有被3个以外的页面同时引用时才会被提取出来作为common chunks
       minChunks: 4 || chunks.length
     }),
     /*
@@ -96,7 +98,13 @@ var webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
-    ])*/
+    ]),*/
+    new PrerenderSpaPlugin(
+      // Absolute path to compiled SPA
+      path.join(__dirname, '../dist'),
+      // List of routes to prerender
+      ['/']
+    )
   ]
 })
 
@@ -123,10 +131,18 @@ if (config.build.bundleAnalyzerReport) {
 var pages =  utils.getMultiEntry('./src/'+config.moduleName+'/*/template.html')
 for (var pathname in pages) {
   var conf = {
-    filename: pathname + '/index.html',
-    template: pages[pathname],        // 模板路径
-    chunks: ['vendor', pathname],     // 每个html引用的js模块
-    inject: true                      // js插入位置
+    template: pages[pathname],                  // 模板路径
+    filename: pathname + '/index.html',         // 输出路径
+    chunks: [pathname, 'vendors', 'manifest'],  // 每个html引用的js模块
+    inject: true,                               // js插入位置
+    minify: { // more options:https://github.com/kangax/html-minifier#options-quick-reference
+      minifyCSS: true,
+      minifyJS: true,
+      removeComments: true,
+      collapseWhitespace: true,
+      removeAttributeQuotes: false
+    },
+    favicon: ''
   }
 
   webpackConfig.plugins.push(new HtmlWebpackPlugin(conf))

@@ -75,30 +75,6 @@ const isWechat = /micromessenger/i.test(ua)
 const isWeb = !(isAndroid || isIpad || isIpod || isIphone)
 const isIos = isIphone || isIpad || isIpod
 
-function _hasClass(elem, cls) {
-  if(!elem || !cls) return false
-  if (cls.replace(/\s/g, '').length == 0) return false
-  return new RegExp(' ' + cls + ' ').test(' ' + elem.className + ' ')
-}
-
-function _addClass(elem, cls) {
-  if (elem && !_hasClass(elem, cls)) {
-    elem.className = elem.className == '' ? cls : elem.className + ' ' + cls
-  }
-  return this
-}
-
-function _removeClass(elem, cls) {
-  if (_hasClass(elem, cls)) {
-    var newClass = ' ' + elem.className.replace(/[\t\r\n]/g, '') + ' '
-    while (newClass.indexOf(' ' + cls + ' ') >= 0) {
-      newClass = newClass.replace(' ' + cls + ' ', ' ')
-    }
-    elem.className = newClass.replace(/^\s+|\s+$/g, '')
-  }
-  return this
-}
-
 /*========本地存储===========*/
 const STORE_PREFIX = '_usee_client_'
 export let storage = {
@@ -213,8 +189,6 @@ export let utils = {
   regexp: {
     mobile: /^\s*1\d{10}\s*$/
   },
-  addClass: _addClass,
-  removeClass: _removeClass,
   noop(){},
   extend(target, ...objs) {
     if(!utils.isPlainObject(target)) return null
@@ -406,7 +380,7 @@ export let utils = {
     },
     wxHead(src, size = 132) {
       if(!src) {
-        return require('assets/images/avatar.jpg')
+        return `https://placeholdit.imgix.net/~text?txtsize=16&bg=999&txtclr=fff&txt=%E5%9B%BE%E7%89%87%E7%BC%BA%E5%A4%B1&w=${size}&h=${size}`
       }
       if(src.indexOf('wx.qlogo.cn') === -1){
         return src
@@ -414,6 +388,21 @@ export let utils = {
       // 有0、46、64、96、132数值可选，0代表640*640正方形头像
       return src.replace(/\/0$/, '/' + size)
     }
+  },
+  convertImgToBase64(url = '', callback, outputFormat){
+    var canvas = document.createElement('canvas'),
+      ctx = canvas.getContext('2d'),
+      img = new Image
+    img.crossOrigin = ''
+    img.onload = function(){
+      canvas.height = img.height
+      canvas.width = img.width
+      ctx.drawImage(img,0,0)
+      var dataURL = canvas.toDataURL(outputFormat || 'image/png')
+      callback.call(this, dataURL)
+      canvas = null;
+    }
+    img.src = url
   },
   toptip(text = '', ms = 3000) {
     if(!text) return
@@ -431,36 +420,5 @@ export let utils = {
     this.toptipTimeid = setTimeout(function(){
       toptip.classList.remove('_show')
     }, ms)
-  },
-  showWaiting(text = '') {
-    let waiting = document.querySelector('#l-waiting')
-    if(!waiting){
-      waiting = document.createElement('div')
-      waiting.id = 'l-waiting'
-      waiting.className = 'l-waiting'
-      waiting.innerHTML = '<div class="_inner"><i class="mui-spinner"></i><p class="_txt"></p></div>'
-      document.body.appendChild(waiting)
-    }
-    document.querySelector('#l-waiting ._txt').innerHTML = text
-    waiting.classList.remove('_hide')
-  },
-  hideWaiting() {
-    let waiting = document.querySelector('#l-waiting')
-    waiting && waiting.classList.add('_hide')
-  },
-  convertImgToBase64(url = '', callback, outputFormat){
-    var canvas = document.createElement('canvas'),
-      ctx = canvas.getContext('2d'),
-      img = new Image
-    img.crossOrigin = ''
-    img.onload = function(){
-      canvas.height = img.height
-      canvas.width = img.width
-      ctx.drawImage(img,0,0)
-      var dataURL = canvas.toDataURL(outputFormat || 'image/png')
-      callback.call(this, dataURL)
-      canvas = null;
-    }
-    img.src = url
   }
 }
