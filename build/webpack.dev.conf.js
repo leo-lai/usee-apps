@@ -42,13 +42,13 @@ for (var pathname in pages) {
   var conf = {
     template: pages[pathname],                  // 模板路径
     filename: pathname + '.html',               // 输出路径
-    chunks: [pathname, 'vendors', 'manifest'],  // 每个html引用的js模块
+    chunks: [pathname],                         // 每个html引用的js模块
     inject: true,                               // js插入位置
     minify: { // more options:https://github.com/kangax/html-minifier#options-quick-reference
-      minifyCSS: true,
-      minifyJS: true,
+      // minifyCSS: true,
+      // minifyJS: true,
       removeComments: true,
-      collapseWhitespace: true,
+      // collapseWhitespace: true,
       removeAttributeQuotes: false
     },
     favicon: ''

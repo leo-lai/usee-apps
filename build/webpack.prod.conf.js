@@ -88,8 +88,12 @@ var webpackConfig = merge(baseWebpackConfig, {
       name: 'vendor',                 // 公共模块的名称
       chunks: chunks,                 // chunks是需要提取的模块
       // 公共模块被使用的最小次数。比如配置为3，也就是同一个模块只有被3个以外的页面同时引用时才会被提取出来作为common chunks
-      minChunks: 4 || chunks.length
+      minChunks: chunks.length
     }),
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   name: 'manifest',
+    //   chunks: ['vendor']
+    // }),
     /*
     // copy custom static assets
     new CopyWebpackPlugin([
@@ -99,12 +103,12 @@ var webpackConfig = merge(baseWebpackConfig, {
         ignore: ['.*']
       }
     ]),*/
-    new PrerenderSpaPlugin(
-      // Absolute path to compiled SPA
-      path.join(__dirname, '../dist'),
-      // List of routes to prerender
-      ['/']
-    )
+    // new PrerenderSpaPlugin(
+    //   // Absolute path to compiled SPA
+    //   path.join(__dirname, '../dist'),
+    //   // List of routes to prerender
+    //   ['/']
+    // )
   ]
 })
 
@@ -131,15 +135,15 @@ if (config.build.bundleAnalyzerReport) {
 var pages =  utils.getMultiEntry('./src/'+config.moduleName+'/*/template.html')
 for (var pathname in pages) {
   var conf = {
-    template: pages[pathname],                  // 模板路径
-    filename: pathname + '/index.html',         // 输出路径
-    chunks: [pathname, 'vendors', 'manifest'],  // 每个html引用的js模块
-    inject: true,                               // js插入位置
+    template: pages[pathname],                              // 模板路径
+    filename: pathname + '/index.html',                     // 输出路径
+    chunks: ['vendor', pathname],                           // 每个html引用的js模块
+    inject: true,                                           // js插入位置
     minify: { // more options:https://github.com/kangax/html-minifier#options-quick-reference
       minifyCSS: true,
-      minifyJS: true,
+      // minifyJS: true,
       removeComments: true,
-      collapseWhitespace: true,
+      // collapseWhitespace: true,
       removeAttributeQuotes: false
     },
     favicon: ''
