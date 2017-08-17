@@ -1,5 +1,5 @@
 <template>
-  <f7-page>
+  <f7-page :no-navbar="$$utils.device.isWechat">
     <f7-navbar title="About" back-link="Back" sliding></f7-navbar>
     <f7-block inner>
       <p>Here is About page!</p>

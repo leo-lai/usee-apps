@@ -76,7 +76,7 @@ const isWeb = !(isAndroid || isIpad || isIpod || isIphone)
 const isIos = isIphone || isIpad || isIpod
 
 /*========本地存储===========*/
-const STORE_PREFIX = '_usee_client_'
+const STORE_PREFIX = '_client_'
 export let storage = {
   getPrefix: () => STORE_PREFIX,
   cookies: {
@@ -258,7 +258,7 @@ export let utils = {
     return !isNaN( parseFloat(value) ) && isFinite( value )
   },
 	setTitle(title) {
-		document.title = title || 'U视一号'
+		document.title = title || '微信浏览器'
     // 判断是否为ios设备的微信浏览器，加载iframe来刷新title
     if (isWechat && isIphone) {
       let iframe = document.createElement('iframe')
@@ -342,21 +342,25 @@ export let utils = {
     },
     join(...paths) {
       let passPath = []
-      paths.filter((item) => utils.isString(item))
-        .map((item) => {
-          item = item.replace(/^\/+|\/+$/g, '')
-          if(item){
-            passPath.push(item)
-          }
-        })
-      return passPath.join('/')
+      paths.filter((item) => utils.isString(item)).map((item) => {
+        item = item.replace(/^\/+|\/+$/g, '')
+        if(item){
+          passPath.push(item)
+        }
+      })
+      return '/' + passPath.join('/')
     }
   },
   history: {
-    push(url = '', title = '') { 
-      window.history.pushState({}, title,  url)
+    push(url, title, data, root) { 
+      utils.history.assign(url, title, data)
     },
-    replace() {}
+    replace(url, title, data) {
+      utils.history.assign(url, title, data, 'replace')
+    },
+    assign(url = '', title = '', data = {}, action = 'push') {
+      window.history[action + 'State'](data, title, url)
+    }
   },
   image: {
     thumb(src = '', width, height) {
